@@ -5,37 +5,49 @@ import {
     validateFxn,
 } from './helpers';
 
-function binarySearch(array: number[], numberToFind: number) {
-    let numberFound = false;
+class Node {
+    data: number;
+    left: Node;
+    right: Node;
 
-    let halfWayPointArrayIndex = 0;
+    constructor(value: number) {
+        this.data = value;
+        this.left = null;
+        this.right = null;
+    }
+}
 
-    while (numberFound === false) {
-        halfWayPointArrayIndex = Math.floor(array.length / 2);
-        let halfWayPoint = array[halfWayPointArrayIndex];
+class BST {
+    root: Node;
 
-        if (array.length < 1) {
-            numberFound = true;
-        } else if (halfWayPoint !== numberToFind) {
-            if (halfWayPoint < halfWayPointArrayIndex) {
-                array = array.slice(0, halfWayPoint);
-            } else {
-                array = array.slice(halfWayPoint, array.length);
-            }
-        } else {
-            numberFound = true;
-        }
+    constructor() {
+        this.root = null;
     }
 
-    return halfWayPointArrayIndex;
+    push(value) {
+        const node = new Node(value);
+
+        if (this.root === null) {
+            this.root = node;
+        } else if (value > this.root.data) {
+            this.root.left = node;
+        } else {
+            this.root.right = node;
+        }
+    }
 }
 
 consoleStart();
 
-validateFxn(binarySearch([1, 2, 3, 4, 5], 3), 2);
-validateFxn(binarySearch([1, 2, 3, 4, 5], 5), 4);
-validateFxn(binarySearch([1, 2, 3, 4, 5], 1), 0);
-validateFxn(binarySearch([1, 2, 3, 4, 5, 6], 3), 2);
+const nums = [3, 1, 5];
+const tree = new BST();
+nums.map((num) => tree.push(num));
+
+const tree2 = tree;
+// expect(objs.value).toEqual(3);
+
+//validateFxn(BST([1, 2, 3, 4, 5], 3), 2);
+//validateFxn(BST([1, 2, 3, 4, 5], 5), 4);
 
 consoleEnd();
 consoleBuffer();
