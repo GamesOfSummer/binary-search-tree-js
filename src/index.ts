@@ -5,19 +5,29 @@ import {
     validateFxn,
 } from './helpers';
 
+// import { describe, expect, it } from '@jest/globals';
+
 class Node {
     data: number;
     left: Node;
     right: Node;
 
-    constructor(value: number) {
+    constructor(value: number = null, left: Node = null, right: Node = null) {
         this.data = value;
         this.left = null;
         this.right = null;
     }
+
+    serialize() {
+        // @ts-ignore
+        const ans: Node = { data: this.data };
+        ans.left = this.left === null ? null : this.left.serialize();
+        ans.right = this.right === null ? null : this.right.serialize();
+        return ans;
+    }
 }
 
-class BST {
+export class BST {
     root: Node;
 
     constructor() {
@@ -29,11 +39,15 @@ class BST {
 
         if (this.root === null) {
             this.root = node;
-        } else if (value > this.root.data) {
+        } else if (value < this.root.data) {
             this.root.left = node;
         } else {
             this.root.right = node;
         }
+    }
+
+    toObject() {
+        return this.root.serialize();
     }
 }
 
@@ -43,11 +57,13 @@ const nums = [3, 1, 5];
 const tree = new BST();
 nums.map((num) => tree.push(num));
 
-const tree2 = tree;
-// expect(objs.value).toEqual(3);
+const objs = tree.toObject();
 
-//validateFxn(BST([1, 2, 3, 4, 5], 3), 2);
-//validateFxn(BST([1, 2, 3, 4, 5], 5), 4);
+const tree2 = tree;
+
+validateFxn(objs.data, 3);
+validateFxn(objs.left.data, 1);
+validateFxn(objs.right.data, 5);
 
 consoleEnd();
 consoleBuffer();
