@@ -1,12 +1,24 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BST = void 0;
 var helpers_1 = require("./helpers");
+// import { describe, expect, it } from '@jest/globals';
 var Node = /** @class */ (function () {
-    function Node(value) {
+    function Node(value, left, right) {
+        if (value === void 0) { value = null; }
+        if (left === void 0) { left = null; }
+        if (right === void 0) { right = null; }
         this.data = value;
         this.left = null;
         this.right = null;
     }
+    Node.prototype.serialize = function () {
+        // @ts-ignore
+        var ans = { data: this.data };
+        ans.left = this.left === null ? null : this.left.serialize();
+        ans.right = this.right === null ? null : this.right.serialize();
+        return ans;
+    };
     return Node;
 }());
 var BST = /** @class */ (function () {
@@ -18,23 +30,47 @@ var BST = /** @class */ (function () {
         if (this.root === null) {
             this.root = node;
         }
-        else if (value > this.root.data) {
-            this.root.left = node;
-        }
         else {
-            this.root.right = node;
+            var continueRun = true;
+            var currentNode = this.root;
+            while (continueRun) {
+                if (value < currentNode.data) {
+                    if (currentNode.left === null) {
+                        currentNode.left = node;
+                        continueRun = false;
+                    }
+                    else {
+                        currentNode = currentNode.left;
+                    }
+                }
+                else {
+                    if (currentNode.right === null) {
+                        currentNode.right = node;
+                        continueRun = false;
+                    }
+                    else {
+                        currentNode = currentNode.right;
+                    }
+                }
+            }
         }
+    };
+    BST.prototype.toObject = function () {
+        return this.root.serialize();
     };
     return BST;
 }());
+exports.BST = BST;
 (0, helpers_1.consoleStart)();
-var nums = [3, 1, 5];
+var nums = [3, 1, 5, 6];
 var tree = new BST();
 nums.map(function (num) { return tree.push(num); });
+var objs = tree.toObject();
 var tree2 = tree;
-// expect(objs.value).toEqual(3);
-//validateFxn(BST([1, 2, 3, 4, 5], 3), 2);
-//validateFxn(BST([1, 2, 3, 4, 5], 5), 4);
+(0, helpers_1.validateFxn)(objs.data, 3);
+(0, helpers_1.validateFxn)(objs.left.data, 1);
+(0, helpers_1.validateFxn)(objs.right.data, 5);
+(0, helpers_1.validateFxn)(objs.right.right.data, 6);
 (0, helpers_1.consoleEnd)();
 (0, helpers_1.consoleBuffer)();
 //# sourceMappingURL=index.js.map

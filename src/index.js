@@ -30,11 +30,29 @@ var BST = /** @class */ (function () {
         if (this.root === null) {
             this.root = node;
         }
-        else if (value < this.root.data) {
-            this.root.left = node;
-        }
         else {
-            this.root.right = node;
+            var continueRun = true;
+            var currentNode = this.root;
+            while (continueRun) {
+                if (value < currentNode.data) {
+                    if (currentNode.left === null) {
+                        currentNode.left = node;
+                        continueRun = false;
+                    }
+                    else {
+                        currentNode = currentNode.left;
+                    }
+                }
+                else {
+                    if (currentNode.right === null) {
+                        currentNode.right = node;
+                        continueRun = false;
+                    }
+                    else {
+                        currentNode = currentNode.right;
+                    }
+                }
+            }
         }
     };
     BST.prototype.toObject = function () {
@@ -44,7 +62,7 @@ var BST = /** @class */ (function () {
 }());
 exports.BST = BST;
 (0, helpers_1.consoleStart)();
-var nums = [3, 1, 5];
+var nums = [3, 1, 5, 6, 8];
 var tree = new BST();
 nums.map(function (num) { return tree.push(num); });
 var objs = tree.toObject();
@@ -52,5 +70,7 @@ var tree2 = tree;
 (0, helpers_1.validateFxn)(objs.data, 3);
 (0, helpers_1.validateFxn)(objs.left.data, 1);
 (0, helpers_1.validateFxn)(objs.right.data, 5);
+(0, helpers_1.validateFxn)(objs.right.right.data, 6);
+(0, helpers_1.validateFxn)(objs.right.right.right.data, 8);
 (0, helpers_1.consoleEnd)();
 (0, helpers_1.consoleBuffer)();

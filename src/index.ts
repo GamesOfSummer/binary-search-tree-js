@@ -39,10 +39,26 @@ export class BST {
 
         if (this.root === null) {
             this.root = node;
-        } else if (value < this.root.data) {
-            this.root.left = node;
         } else {
-            this.root.right = node;
+            let continueRun = true;
+            let currentNode = this.root;
+            while (continueRun) {
+                if (value < currentNode.data) {
+                    if (currentNode.left === null) {
+                        currentNode.left = node;
+                        continueRun = false;
+                    } else {
+                        currentNode = currentNode.left;
+                    }
+                } else {
+                    if (currentNode.right === null) {
+                        currentNode.right = node;
+                        continueRun = false;
+                    } else {
+                        currentNode = currentNode.right;
+                    }
+                }
+            }
         }
     }
 
@@ -53,7 +69,7 @@ export class BST {
 
 consoleStart();
 
-const nums = [3, 1, 5];
+const nums = [3, 1, 5, 6, 8];
 const tree = new BST();
 nums.map((num) => tree.push(num));
 
@@ -64,6 +80,8 @@ const tree2 = tree;
 validateFxn(objs.data, 3);
 validateFxn(objs.left.data, 1);
 validateFxn(objs.right.data, 5);
+validateFxn(objs.right.right.data, 6);
+validateFxn(objs.right.right.right.data, 8);
 
 consoleEnd();
 consoleBuffer();
